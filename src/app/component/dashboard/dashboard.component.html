@@ -1,0 +1,65 @@
+<div class="dashboard-container">
+    <!-- Balance, Total Income, and Total Expense Section -->
+    <div nz-row class="balance-row">
+        <div nz-col nzSpan="8" nz-card-grid>
+            <nz-card>
+                <h3>Balance</h3>
+                <p class="balance-value">${{ stats?.balance }}</p>
+            </nz-card>
+        </div>
+        <div nz-col nzSpan="8" nz-card-grid>
+            <nz-card>
+                <h3>Total Income</h3>
+                <p class="income-value">${{ stats?.income }}</p>
+            </nz-card>
+        </div>
+        <div nz-col nzSpan="8" nz-card-grid>
+            <nz-card>
+                <h3>Total Expense</h3>
+                <p class="expense-value">${{ stats?.expense }}</p>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Chart and Recent History Section -->
+    <div nz-row class="chart-row">
+        <div nz-col nzFlex="1 1 200px">
+            <nz-card nzType="inner" nzTitle="Income Chart" class="chart-card"></nz-card>
+            <canvas #incomeLineChartRef></canvas>
+        </div>
+        <div nz-col nzFlex="0 1 300px" class="history-section">
+            <nz-card nzType="inner" nzTitle="Recent History" class="recent-history-card">
+                <div nz-card-grid class="history-grid">
+                    <span class="positive-history">+{{ stats?.latestIncome?.amount }} {{ stats?.latestIncome?.title }}</span>
+                </div>
+                <div nz-card-grid class="history-grid">
+                    <span class="negative-history">-{{ stats?.latestExpense?.amount }} {{ stats?.latestExpense?.title }}</span>
+                </div>
+            </nz-card>
+            <nz-card nzType="inner" nzTitle="Income" class="stat-card">
+                <div nz-row class="stat-row">
+                    <div nz-col nzXs="2" nzSm="4" nzMd="6" nzLg="8" nzXl="10">Min: {{ stats?.minIncome }}</div>
+                    <div nz-col nzXs="20" nzSm="16" nzMd="12" nzLg="8" nzXl="4">|</div>
+                    <div nz-col nzXs="2" nzSm="4" nzMd="6" nzLg="8" nzXl="10">Max: {{ stats?.maxIncome }}</div>
+                </div>
+            </nz-card>
+            <nz-card nzType="inner" nzTitle="Expense" class="stat-card">
+                <div nz-row class="stat-row">
+                    <div nz-col nzXs="2" nzSm="4" nzMd="6" nzLg="8" nzXl="10">Min: {{ stats?.minExpense }}</div>
+                    <div nz-col nzXs="20" nzSm="16" nzMd="12" nzLg="8" nzXl="4">|</div>
+                    <div nz-col nzXs="2" nzSm="4" nzMd="6" nzLg="8" nzXl="10">Max: {{ stats?.maxExpense }}</div>
+                </div>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Expense Chart Section -->
+    <div nz-row class="chart-row">
+        <div nz-col nzFlex="1 1 200px">
+            <nz-card nzType="inner" nzTitle="Expense Chart" class="chart-card">
+                <canvas #expenseLineChartRef></canvas>
+
+            </nz-card>
+        </div>
+    </div>
+</div>

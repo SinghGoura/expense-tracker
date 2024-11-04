@@ -1,0 +1,47 @@
+.sidenav-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .sidenav {
+    width: 250px;
+    background-color: #f4f4f4;
+    padding: 15px;
+  }
+  
+  .nav-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .nav-list li {
+    margin: 10px 0;
+  }
+  
+  .toolbar {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .menu-button {
+    font-size: 24px;
+    margin-right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .header-nav a {
+    color: white;
+    margin-right: 10px;
+    text-decoration: none;
+  }
+  
+  .spacer {
+    flex-grow: 1;
+  }
+  

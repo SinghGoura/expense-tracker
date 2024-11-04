@@ -1,0 +1,78 @@
+.layout {
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #001529;
+  padding: 0 20px;
+  color: #fff;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: fadeIn 1s ease;
+}
+
+.header-menu {
+  display: flex;
+  gap: 15px;
+}
+
+.header-menu li {
+  list-style: none;
+}
+
+.header-menu a {
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.header-menu a:hover {
+  color: #40a9ff;
+}
+
+.nz-sider {
+  animation: slideIn 0.5s ease;
+}
+
+.right-layout .inner-content {
+  padding: 20px;
+  animation: fadeIn 1s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header-menu {
+    display: none; /* Hide menu bar on smaller screens */
+  }
+
+  .nz-sider {
+    width: 100%; /* Make the sider full-width on mobile */
+  }
+
+  .right-layout {
+    margin-top: 64px; /* Adjust content positioning */
+  }
+}

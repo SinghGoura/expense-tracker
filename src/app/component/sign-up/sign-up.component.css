@@ -1,0 +1,105 @@
+/* Base container styling */
+.signup-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 1.3s ease-in-out;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Heading styling with slide animation */
+  .signup-container h1, .signup-container h3 {
+    color: #444;
+    margin-bottom: 8px;
+    animation: slideDown 0.8s ease;
+  }
+  
+  @keyframes slideDown {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  .input-group {
+    margin-top: 20px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  
+  .input-group input:focus {
+    border-color: #4caf50;
+    outline: none;
+  }
+  
+  /* Button styling */
+  .submit-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: #43a047;
+    transform: scale(1.05);
+  }
+  
+  /* Link styling */
+  span {
+    display: block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #888;
+  }
+  
+  span a {
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  span a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .signup-container {
+      padding: 15px;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
+  
