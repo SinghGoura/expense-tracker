@@ -1,86 +1,79 @@
-/* Base container styling */
+/* Basic styling for the login page */
 .login-container {
-  max-width: 400px;
-  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #f4f7fa; /* Light background for the login page */
+  padding: 20px; /* Add some padding to the container */
+}
+
+nz-card {
+  width: 100%;
+  max-width: 400px; /* Set maximum width for the card */
+  margin: 0 auto;
   padding: 20px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  animation: fadeIn 1.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect for the card */
+  border-radius: 8px; /* Rounded corners for the card */
+  background-color: white;
 }
 
-/* Animation effect for container */
-@keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
+.nz-form-item {
+  margin-bottom: 20px; /* Add spacing between form items */
 }
 
-/* Header and form styling */
-.login-container h1, .login-container h3 {
-  color: #333;
-  margin-bottom: 10px;
-  animation: slideDown 1s ease-in-out;
+.nz-form-control {
+  width: 100%; /* Ensure the form controls take up full width */
 }
 
-@keyframes slideDown {
-  0% { opacity: 0; transform: translateY(-20px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* Error message styling */
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
 }
 
-.input-group {
-  margin-top: 20px;
+/* Styling for the button */
+button[nz-button] {
+  width: 100%; /* Make the button span the full width of the card */
+  padding: 12px;
+  font-size: 16px;
 }
 
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
-  color: #666;
-  font-size: 14px;
-}
-
-/* Input styling */
-.input-group input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-}
-
-.input-group input:focus {
-  border-color: #6c63ff;
-  outline: none;
-}
-
-/* Button styling */
-.submit-btn {
-  background-color: #6c63ff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.submit-btn:hover {
-  background-color: #5a54d6;
-  transform: scale(1.05);
-}
-
-/* Responsive design for smaller screens */
+/* Responsive styles for smaller screens */
 @media (max-width: 768px) {
   .login-container {
-    padding: 15px;
+    padding: 10px; /* Reduce padding on smaller screens */
   }
-  h1 {
-    font-size: 1.8rem;
+
+  nz-card {
+    max-width: 100%; /* Ensure the card takes full width on smaller screens */
+    padding: 15px; /* Adjust padding for smaller screens */
   }
-  h3 {
-    font-size: 1.2rem;
+
+  button[nz-button] {
+    padding: 10px; /* Adjust padding for the button */
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+}
+
+/* Very small screen styling (mobile-first approach) */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 5px; /* Reduce padding even further on small screens */
+  }
+
+  nz-card {
+    max-width: 100%;
+    padding: 10px; /* Less padding on very small screens */
+  }
+
+  button[nz-button] {
+    padding: 8px; /* Adjust button padding for tiny screens */
+    font-size: 14px; /* Keep font size small */
+  }
+
+  .nz-form-item {
+    margin-bottom: 15px; /* Reduce margin for form items on small screens */
   }
 }

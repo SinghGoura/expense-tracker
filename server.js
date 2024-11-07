@@ -39,26 +39,55 @@ userSchema.pre('save', async function (next) {
 
 const User = mongoose.model('User', userSchema);
 
+//sign-Up user Route
+app.post('/api/auth/signup', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Check if the username already exists
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Username already exists' });
+        }
+
+        // Create new user
+        const newUser = new User({ username, password });
+        await newUser.save();
+
+        // Send response with success message
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        console.error('Error registering user:', error.message); // Log the specific error message
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
+  
 // Login Route
 app.post('/api/auth/login', async (req, res) => {
     const { username, password } = req.body;
   
     try {
       const user = await User.findOne({ username });
-      if (!user) return res.status(404).json({ message: 'User not found' });
+      if (!user) {
+        console.error('User not found:', username);  // Log for debugging
+        return res.status(404).json({ message: 'User not found' });
+      }
   
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+      if (!isMatch) {
+        console.error('Invalid credentials for user:', username);  // Log for debugging
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
   
       const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
       res.json({ message: 'Login successful', token });
     } catch (error) {
-      console.error('Login error:', error);
-      res.status(500).json({ message: 'Server error' });
+      console.error('Login error:', error);  // Log the actual error
+      res.status(500).json({ message: 'Server error', error: error.message });
     }
   });
   
-
 
 // Protected route example (only accessible with a valid token)
 app.get('/api/protected', (req, res) => {
