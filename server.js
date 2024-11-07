@@ -1,24 +1,80 @@
 // server.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Use PORT from .env or default to 3000
+const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors()); // Enable CORS for all origins
-app.use(express.json()); // Parse JSON requests
+app.use(cors());
+app.use(express.json());
 
-// Connect to MongoDB using environment variable or default connection string
-mongoose.connect('mongodb://localhost:27017/expense')
+// MongoDB connection strings
+const DB1 = "mongodb+srv://gauravsinghbhu211:E2FgqwHmHAATKtu3@cluster0.z92i4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/expense";
+const DB2 = 'mongodb://localhost:27017/expense';
+
+mongoose.connect(DB1)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
+// JWT Secret Key
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
-// Define your Expense schema and model
+// User Schema and Model
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+});
+
+// Hash password before saving
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
+
+const User = mongoose.model('User', userSchema);
+
+// Login Route
+app.post('/api/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+  
+    try {
+      const user = await User.findOne({ username });
+      if (!user) return res.status(404).json({ message: 'User not found' });
+  
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+  
+      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      res.json({ message: 'Login successful', token });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+
+
+// Protected route example (only accessible with a valid token)
+app.get('/api/protected', (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Access denied' });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        res.json({ message: 'Protected data', userId: decoded.userId });
+    } catch (error) {
+        res.status(403).json({ message: 'Invalid token' });
+    }
+});
+
+
+// Expense Schema and Model
 const expenseSchema = new mongoose.Schema({
     title: { type: String, required: true },
     amount: { type: Number, required: true },
@@ -29,124 +85,76 @@ const expenseSchema = new mongoose.Schema({
 
 const Expense = mongoose.model('Expense', expenseSchema);
 
-// RESTful API Endpoints
-
-// Get all expenses
+// Expense Routes
 app.get('/api/expense/all', async (req, res) => {
     try {
         const expenses = await Expense.find();
-        res.json(expenses); // Respond with the expenses data
+        res.json(expenses);
     } catch (error) {
         console.error('Error fetching expenses:', error);
         res.status(500).send('Error fetching expenses');
     }
 });
 
-// Get expenses by id
 app.get('/api/expense/:id', async (req, res) => {
-    const { id } = req.params; // Extract the ID from the request parameters
+    const { id } = req.params;
 
     try {
-        const expense = await Expense.findById(id); // Find the expense by ID
+        const expense = await Expense.findById(id);
+        if (!expense) return res.status(404).json({ message: 'Expense not found' });
 
-        if (!expense) {
-            return res.status(404).json({ message: 'Expense not found' }); // Handle not found case
-        }
-
-        res.json(expense); // Respond with the expense data
+        res.json(expense);
     } catch (error) {
         console.error('Error fetching expense:', error);
-        res.status(500).json({ message: 'Error fetching expense', error: error.message }); // Send error message
+        res.status(500).json({ message: 'Error fetching expense', error: error.message });
     }
 });
 
-
-// Post new expense
 app.post('/api/expense', async (req, res) => {
-    // Log the request body for debugging
-    console.log(req.body); 
-
-    // Create a new instance of the Expense model with the request body
     const newExpense = new Expense(req.body);
-    
+
     try {
-        // Save the new expense to the database
         await newExpense.save();
-        console.log(newExpense, "Expense created successfully");
-        
-        // Send a 201 Created response with the created expense object
         res.status(201).json({ message: 'Expense created', expense: newExpense });
     } catch (error) {
         console.error('Error creating expense:', error);
-        
-        // Send a 500 Internal Server Error response with a more descriptive message
         res.status(500).json({ message: 'Error creating expense', error: error.message });
     }
 });
 
-// Update
 app.put('/api/expense/:id', async (req, res) => {
-    const { id } = req.params; // Extract the ID from the request parameters
-    const updatedData = req.body; // Get the data to update from the request body
-    console.log(`Received request to update expense with ID: ${req.params.id}`);
-    
+    const { id } = req.params;
+    const updatedData = req.body;
+
     try {
-        // Find the expense by ID and update it with the new data from the request body
         const updatedExpense = await Expense.findByIdAndUpdate(id, updatedData, {
-            new: true,           // Return the updated document
-            runValidators: true, // Validate the data before updating
+            new: true,
+            runValidators: true,
         });
 
-        // If the expense is not found, respond with a 404 status
-        if (!updatedExpense) {
-            return res.status(404).json({ message: 'Expense not found' });
-        }
+        if (!updatedExpense) return res.status(404).json({ message: 'Expense not found' });
 
-        // Respond with a success message and the updated expense data
-        res.json({
-            message: 'Expense updated successfully',
-            expense: updatedExpense,
-        });
+        res.json({ message: 'Expense updated successfully', expense: updatedExpense });
     } catch (error) {
         console.error('Error updating expense:', error);
-        res.status(500).json({
-            message: 'Error updating expense',
-            error: error.message, // Include the error message in the response
-        });
+        res.status(500).json({ message: 'Error updating expense', error: error.message });
     }
 });
 
-
-
-// Delete an expense by ID
-// Delete an expense by ID
-// Delete an expense by ID
 app.delete('/api/expense/:id', async (req, res) => {
-    const { id } = req.params; // Get the ID from the request parameters
+    const { id } = req.params;
 
-    // Log the ID being deleted for debugging
-    console.log(`Attempting to delete expense with ID: ${id}`);
-
-    // Check if the ID is a valid MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ error: 'Invalid ID format' });
     }
 
     try {
-        // Check if the expense exists in the database
         const expense = await Expense.findById(id);
-        if (!expense) {
-            console.log('Expense not found in the database');
-            return res.status(404).json({ error: 'Expense not found' });
-        }
+        if (!expense) return res.status(404).json({ error: 'Expense not found' });
 
-        // Delete the expense
-        const result = await Expense.findByIdAndDelete(id);
-
-        // If deletion is successful, send a success response
+        await Expense.findByIdAndDelete(id);
         res.status(200).json({ message: 'Expense deleted successfully' });
-    } 
-    catch (error) {
+    } catch (error) {
         console.error('Error deleting expense:', error);
         return res.status(500).json({ error: 'Error deleting expense' });
     }
@@ -154,9 +162,7 @@ app.delete('/api/expense/:id', async (req, res) => {
 
 // Import routes for income
 const incomeRoutes = require('./routes/income');
-app.use('/api/income', incomeRoutes);  // Add this line to prefix routes with '/api/income'
-
-
+app.use('/api/income', incomeRoutes);
 
 // Start the server
 app.listen(PORT, () => {
