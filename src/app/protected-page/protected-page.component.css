@@ -1,0 +1,49 @@
+.protected-page {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .protected-page h1 {
+    color: #4caf50;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .protected-page p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .info h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-top: 20px;
+  }
+  
+  .info p {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  .logout-btn {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background-color: #d32f2f;
+  }
+  

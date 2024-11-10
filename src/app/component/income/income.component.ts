@@ -12,6 +12,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-income',
@@ -32,7 +33,7 @@ import { HttpClient } from '@angular/common/http';
 export class IncomeComponent {
 
   incomes: any;
-  incomeForm!: FormGroup;
+  incomeForm: FormGroup;
   categories: string[] = ["Salary", "Freelancing", "Investments", "Stocks", "Bitcoin", "Bank Transfer", "Youtube", "Other"];
 
   constructor(
@@ -43,44 +44,39 @@ export class IncomeComponent {
     private incomeService: IncomeService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     console.log(this.categories); // Check if this logs the category array
     this.incomeForm = this.fb.group({
-      title: [null, Validators.required],
-      amount: [null, Validators.required],
-      date: [null, Validators.required],
-      category: [null, Validators.required],
-      description: [null, Validators.required],
-      source: [null, Validators.required] // Add the source field
+      title: ['', Validators.required],
+      amount: ['', [Validators.required, Validators.min(0)]],
+      date: ['', Validators.required],
+      description: ['', Validators.required],
+      category: ['', Validators.required]
     });
     this.getAllIncomes(); // Corrected method name
   }
   
   async submitForm(): Promise<void> {
+    console.log('Submit function called');
     if (this.incomeForm.valid) {
+      console.log('Form is valid, submitting...');
       try {
         const formData = this.incomeForm.value;
-        console.log(formData,"fht"); // Log the form data
-  
-        // Await the service call and handle it properly
-       const response= await this.incomeService.postIncome(formData).toPromise();
-      console.log(response,"hgjk")
-        // Reset the form
-        this.incomeForm.reset();
-  
-        // Refresh the expense list
+        const response = await this.incomeService.postIncome(formData).toPromise();
+        console.log('Response from service:', response);
+        // this.incomeForm.reset();
         this.getAllIncomes();
-  
-        // Show success message
         this.message.success('Income posted successfully', { nzDuration: 5000 });
       } catch (error) {
-        console.error('Failed to post income', error);  // Log the error
-        this.message.error('Error posting income: ', { nzDuration: 5000 })  // Show error message with details
+        console.error('Failed to post income', error);
+        this.message.error('Error posting income', { nzDuration: 5000 });
       }
     } else {
+      console.log('Form is invalid');
       this.message.error('Please fill in all required fields', { nzDuration: 5000 });
     }
   }
+  
   
   
 
@@ -88,17 +84,16 @@ export class IncomeComponent {
     this.router.navigateByUrl(`/income/${id}/edit`);
   }
 
-  getAllIncomes() {
-    this.incomeService.getAllIncomes().subscribe(
-      res => {
-        this.incomes = res;
-      },
-      error => {
-        console.error('Error details:', error); // Log the full error to console
-        this.message.error("Error while getting incomes: " + error.message, { nzDuration: 5000 });
-      }
-    );
+  async getAllIncomes() {
+    try {
+      const incomes = await lastValueFrom(this.incomeService.getAllIncomes());
+      this.incomes = incomes;
+    } catch (error) {
+      console.error('Error fetching incomes:', error);
+      this.message.error('Failed to load incomes', { nzDuration: 5000 });
+    }
   }
+  
 
   deleteIncome(id: number) {
     const url = `http://localhost:3000/api/income/${id}`;  // Corrected the URL to point to the income endpoint

@@ -1,132 +1,115 @@
-/* Container and Column Styles */
+/* Base styles for the form and card */
 .custom-form {
-  .w-100 {
-    width: 100%;
-  }
-
-  nz-form-item {
-    margin-bottom: 16px;
-  }
-
-  button {
-    margin-top: 16px;
-    width: 100%; /* Ensure button width fills the form */
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Spacing between form items */
 }
 
-.income-list-column {
-  flex: 1;
-  max-width: 45%;
-  padding: 16px;
+.w-100 {
+  width: 100%;
 }
 
-/* Card Styles */
-nz-card {
-  .ant-card-body {
-    padding: 20px;
-  }
-
-  .ant-card-title {
-    font-weight: bold;
-    color: #333;
-  }
-
-  .ant-card-grid {
-    padding: 10px;
-    border: 1px solid #f0f0f0;
-    margin-bottom: 10px;
-    background-color: #fafafa;
-  }
-
-  .ant-card-row {
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
+/* Card Styling */
 .nz-card {
-  background-color: #f9f9f9; /* Light background for better contrast */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-.nz-card-grid {
-  border-bottom: 1px solid #e8e8e8; /* Dividers between expenses */
-  padding: 16px 0; /* Vertical spacing */
+/* Styling for form fields */
+.nz-form-item {
+  margin-bottom: 16px; /* Space between form fields */
 }
 
-.nz-card-grid:last-child {
-  border-bottom: none; /* Remove border from the last item */
-}
-
-.nz-icon {
-  margin-right: 8px; /* Space between icons and text */
-  vertical-align: middle; /* Align icons with text */
-}
-
+/* Responsive Grid */
 .nz-row {
   display: flex;
-  align-items: center; /* Center items vertically */
+  flex-wrap: wrap;
 }
 
+/* Column styling for main form and income list */
 .nz-col {
-  display: flex;
-  justify-content: space-between; /* Space between edit/delete icons */
+  padding: 8px;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  /* Adjust main layout on tablet and larger screens */
+  .nz-row {
+    justify-content: space-between;
+  }
+  .nz-col {
+    flex: 1 1 48%; /* Each column takes roughly half the width on larger screens */
+    max-width: 48%;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Adjustments for mobile screens */
+  .nz-col {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  /* Font sizes for smaller screens */
+  input[nz-input], textarea[nz-input], .nz-select {
+    font-size: 14px;
+  }
+
+  /* Adjust button width */
+  .w-100 {
+    width: 100%;
+    font-size: 16px;
+  }
+}
+
+/* Income List Styling */
+.income-list-column {
+  margin-top: 16px;
+}
+
+/* Icons and action buttons */
+.nz-icon {
+  margin-right: 4px;
 }
 
 span[nz-icon] {
-  cursor: pointer; /* Change cursor to pointer for clickable icons */
-  transition: color 0.3s; /* Smooth color transition */
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-span[nz-icon]:hover {
-  color: #1890ff; /* Change icon color on hover */
+span[nz-icon][nzType="edit"]:hover {
+  color: #1890ff; /* Blue on hover */
 }
 
 span[nz-icon][nzType="delete"]:hover {
-  color: darkred; /* Specific hover color for delete icon */
+  color: #ff4d4f; /* Red on hover */
 }
 
-h3 {
-  margin: 0; /* Remove default margin */
+/* Card Item in Income List */
+.income-list-column .nz-card {
+  margin-bottom: 8px;
 }
 
-.margin-left {
-  margin-left: 20px; /* Consistent margin */
+.income-list-column .nz-col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Responsive Layout */
-@media (max-width: 992px) {
-  /* For medium screens */
-  .custom-container {
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .custom-container > [nz-col][nzFlex="2"],
-  .income-list-column {
-    max-width: 48%; /* Nearly half-width columns for medium screens */
-  }
+/* Button styling */
+button[nz-button] {
+  padding: 8px 16px;
+  border-radius: 4px;
 }
 
-@media (max-width: 768px) {
-  /* For small screens */
-  .custom-container {
-    flex-direction: column;
-  }
+button[nz-button][nzType="primary"] {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  color: #fff;
+}
 
-  .custom-container > [nz-col][nzFlex="2"],
-  .income-list-column {
-    max-width: 100%; /* Full-width columns for small screens */
-    padding: 8px;
-  }
-
-  nz-card .ant-card-body,
-  .nz-card-grid {
-    padding: 12px; /* Reduce padding for smaller screens */
-  }
-
-  button {
-    margin-top: 8px;
-  }
+button[nz-button][nzType="primary"]:disabled {
+  background-color: #d9d9d9;
+  border-color: #d9d9d9;
+  color: #fff;
 }

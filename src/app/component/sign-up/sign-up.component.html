@@ -1,15 +1,18 @@
 <div class="signup-container">
   <h1>Hello, Welcome</h1>
   <h3>Create An Account</h3>
-  <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+  <form [formGroup]="signupForm" (ngSubmit)="submitSignUp()">
     <div class="input-group">
       <label for="email">Email</label>
       <input formControlName="email" type="email" required>
       
+      <label for="username">Username</label>
+      <input formControlName="username" type="text" required>
+      
       <label for="password">Password</label>
-      <input formControlName="password" type="password">
+      <input formControlName="password" type="password" required>
     </div>
-    <button class="submit-btn">Submit</button>
+    <button class="submit-btn" type="submit" [disabled]="signupForm.invalid">Submit</button>
     <span>Already have an account? 
       <a href="/login">Login</a>
     </span>

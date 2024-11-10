@@ -38,7 +38,7 @@ export class ExpenseComponent implements OnInit {
   expenseForm!: FormGroup;
   
   expenses: any[] = []; // To store the fetched expenses
-   categories = ['Food', 'Travel', 'Shopping', 'Utilities'];
+   categories = ['Food', 'Travel', 'Shopping', 'Utilities',"Bank Transfer","Business","Medical"];
 
   constructor(
     private http: HttpClient,  // For making HTTP requests

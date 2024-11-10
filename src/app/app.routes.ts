@@ -7,20 +7,48 @@ import { SignUpComponent } from './component/sign-up/sign-up.component';
 import { ForgetComponent } from './component/forget/forget.component';
 import { UpdateExpenseComponent } from './component/update-expense/update-expense.component';
 import { UpdateIncomeComponent } from './component/update-income/update-income.component';
+import { ProtectedPageComponent } from './protected-page/protected-page.component';
+import { authGuard } from './auth.guard';
 export const routes: Routes = [
-    {
-        path:'',
-        redirectTo:'sign-up',
-        pathMatch:'full'
-    },
-    {path:'forget',component:ForgetComponent},
-    {path:'sign-up',component:SignUpComponent},
-    {path:'login',component:LoginComponent},
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'income', component: IncomeComponent },
-    { path:'income/:id/edit', component: UpdateIncomeComponent},
-    { path: 'expense', component: ExpenseComponent },  // Correct way to define the route
-    { path: 'expense/:id/edit', component: UpdateExpenseComponent },
-    // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    { path: '**', redirectTo: '/dashboard' } 
+   
+    // Publicly accessible routes
+  { path: 'sign-up', component: SignUpComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'forget', component: ForgetComponent },
+
+  // Protected routes
+  { 
+    path: 'protected-page',  
+    component: ProtectedPageComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'dashboard', 
+    component: DashboardComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'income', 
+    component: IncomeComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'income/:id/edit', 
+    component: UpdateIncomeComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'expense', 
+    component: ExpenseComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'expense/:id/edit', 
+    component: UpdateExpenseComponent, 
+    canActivate: [authGuard] 
+  },
+
+  // Redirect to sign-up by default if not authenticated
+  { path: '', redirectTo: 'sign-up', pathMatch: 'full' },
+  { path: '**', redirectTo: 'sign-up' }
 ];

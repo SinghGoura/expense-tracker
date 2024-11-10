@@ -1,11 +1,24 @@
-import { StatsService } from './../../service/stats/stats.service';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild,AfterViewInit,OnInit } from '@angular/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { CommonModule } from '@angular/common';
-import Chart from 'chart.js/auto';
-import { CategoryScale } from 'chart.js';
+import{Chart,registerables,ChartConfiguration} from 'chart.js';
+import { DashboardService } from '../../service/dashboard.service';
+import { HttpClient } from '@angular/common/http';
+import { StatsService,StatsResponse } from '../../service/stats/stats.service';
+// Register Chart.js plugins
+Chart.register(...registerables);
 
-Chart.register(CategoryScale);
+interface Stats {
+  balance: number;
+  income: number;
+  expense: number;
+  latestIncome: { amount: number; title: string };
+  latestExpense: { amount: number; title: string };
+  minIncome: number;
+  maxIncome: number;
+  minExpense: number;
+  maxExpense: number;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -16,87 +29,84 @@ Chart.register(CategoryScale);
 })
 export class DashboardComponent {
 
-  stats:any;
-  income:any;
-  expense:any;
+  statsData?: StatsResponse;
+  errorMessage = '';
+  stats: any = {};
+  @ViewChild('incomeLineChartRef') incomeLineChartRef!: ElementRef;
+  @ViewChild('expenseLineChartRef') expenseLineChartRef!: ElementRef;
 
-  gridStyle ={
-    width: '25%',
-    textAlign:'center'
-  };
+  constructor(private dashboardService: DashboardService,private http: HttpClient,
+    private statsService: StatsService
+  ) {}
 
-  @ViewChild('incomeLineChartRef') private incomeLineChartRef:ElementRef;
-  @ViewChild('expenseLineChartRef') private expenseLineChartRef:ElementRef;
-
-  constructor(private statsService:StatsService){
-   
-    this.getStats();
-    this.getChartData();
+  ngOnInit(): void {
+    this.statsService.getStats().subscribe({
+      next: (data) => {
+        this.statsData = data;
+        this.createIncomeChart();  // Create chart after data is fetched
+        this.createExpenseChart();
+      },
+      error: (error) => {
+        this.errorMessage = error.message;
+        console.error('Error fetching data:', error);
+      }
+    });
   }
 
-  createLineChart(){
-    const incomectx = this.incomeLineChartRef.nativeElement.getContext('2d');
+//   fetchDashboardData(): void {
+//     this.http.get('/api/dashboard-data').subscribe(
+//       data => {
+//         this.stats = data;
+//       },
+//       error => {
+//         console.error('Error fetching data:', error);
+//       }
+//     );
+//   }
 
-    new Chart(incomectx, {
+ngAfterViewInit(): void {
+    // Charts will be initialized once the data is loaded in ngOnInit
+  }
+  createIncomeChart(): void {
+    if (!this.statsData) return;
+
+    const ctx = this.incomeLineChartRef.nativeElement.getContext('2d');
+    new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.income.map(income => income.date),
-        datasets: [{
-          label: 'income',
-          data: this.income.map(income => income.amount),
-          borderWidth: 1,
-          backgroundColor:'rgb(80,200,120)',
-          borderColor:'rgb(0,100,0)'
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        labels: this.statsData.incomeHistory.dates,  // Use dynamic dates from statsData
+        datasets: [
+          {
+            label: 'Income',
+            data: this.statsData.incomeHistory.amounts,  // Use dynamic amounts from statsData
+            borderColor: '#4CAF50',
+            fill: false
           }
-        }
+        ]
       }
     });
+  }
 
-    const expensectx = this.expenseLineChartRef.nativeElement.getContext('2d');
-
-    new Chart(expensectx, {
+  createExpenseChart(): void {
+    if (!this.statsData) return;
+    const ctx = this.expenseLineChartRef.nativeElement.getContext('2d');
+    new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.expense.map(income => income.date),
-        datasets: [{
-          label: 'expense',
-          data: this.expense.map(income => income.amount),
-          borderWidth: 1,
-          backgroundColor:'rgb(255,0,0)',
-          borderColor:'rgb(255,0,0)'
-        }]
+        labels: this.statsData.expenseHistory.dates, // Dates from the expense history
+        datasets: [
+          {
+            label: 'Expenses',
+            data: this.statsData.expenseHistory.amounts, // Expense amounts from history
+            borderColor: '#F44336',
+            fill: false,
+          },
+        ],
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
+        responsive: true,
+        maintainAspectRatio: false,
+      },
     });
-  }
-  getStats(){
-    this.statsService.getStats().subscribe(res => {
-      console.log(res);
-      this.stats=res;
-    });
-  }
-
-  getChartData(){
-    this.statsService.getChart().subscribe(res=>{
-      if(res.expenseList != null  && res.incomeList !=null){
-        this.income=res.incomeList;
-        this.expense=res.expenseList;
-        console.log(res);
-
-        this.createLineChart();
-      }
-    })
   }
 }

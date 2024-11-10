@@ -6,10 +6,11 @@ const router = express.Router(); // Use express Router for routing
 
 // Define the Income schema and model
 const incomeSchema = new mongoose.Schema({
-    source: { type: String, required: true },     // Source of income (e.g., salary, freelance)
-    amount: { type: Number, required: true },     // Amount of income
-    date: { type: Date, required: true },         // Date of income
-    description: { type: String, required: true } // Description of the income
+    title: { type: String, required: true },
+    amount: { type: Number, required: true },
+    date: { type: Date, required: true },
+    description: { type: String, required: true },
+    category: { type: String, required: true }// Description of the income
 });
 
 const Income = mongoose.model('Income', incomeSchema);
@@ -20,10 +21,20 @@ const Income = mongoose.model('Income', incomeSchema);
 router.get('/all', async (req, res) => {
     try {
         const incomes = await Income.find();
-        res.json(incomes); // Respond with the income data
+        
+        // Check if incomes are found
+        if (!incomes || incomes.length === 0) {
+            return res.status(404).json({ message: 'No incomes found' });
+        }
+
+        console.log(incomes, "success"); // Optionally log for debugging
+        
+        res.status(200).json(incomes); // Send back income data with status 200 (OK)
     } catch (error) {
         console.error('Error fetching income:', error);
-        res.status(500).send('Error fetching income');
+
+        // Send error response with appropriate status code and message
+        res.status(500).json({ message: 'Error fetching income', error: error.message });
     }
 });
 

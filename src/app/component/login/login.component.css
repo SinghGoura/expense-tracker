@@ -1,79 +1,144 @@
-/* Basic styling for the login page */
+/* General Styles */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
-  background-color: #f4f7fa; /* Light background for the login page */
-  padding: 20px; /* Add some padding to the container */
+  min-height: 100vh;
+  background-image: url('https://images.pexels.com/photos/8072335/pexels-photo-8072335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); /* Replace with your image URL */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: fadeIn 1s ease-in-out;
 }
 
 nz-card {
   width: 100%;
-  max-width: 400px; /* Set maximum width for the card */
-  margin: 0 auto;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect for the card */
-  border-radius: 8px; /* Rounded corners for the card */
-  background-color: white;
+  max-width: 400px;
+  padding: 2rem;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  background: #0c6e425f;
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.8s ease;
+  transition: transform 0.3s ease-in-out;
 }
 
-.nz-form-item {
-  margin-bottom: 20px; /* Add spacing between form items */
+nz-card:hover {
+  transform: scale(1.02);
 }
 
-.nz-form-control {
-  width: 100%; /* Ensure the form controls take up full width */
-}
-
-/* Error message styling */
-.error-message {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-/* Styling for the button */
-button[nz-button] {
-  width: 100%; /* Make the button span the full width of the card */
-  padding: 12px;
-  font-size: 16px;
-}
-
-/* Responsive styles for smaller screens */
+/* Responsive Design */
 @media (max-width: 768px) {
   .login-container {
-    padding: 10px; /* Reduce padding on smaller screens */
+    padding: 1rem;
   }
 
   nz-card {
-    max-width: 100%; /* Ensure the card takes full width on smaller screens */
-    padding: 15px; /* Adjust padding for smaller screens */
-  }
-
-  button[nz-button] {
-    padding: 10px; /* Adjust padding for the button */
-    font-size: 14px; /* Adjust font size for smaller screens */
+    width: 90%;
   }
 }
 
-/* Very small screen styling (mobile-first approach) */
 @media (max-width: 480px) {
-  .login-container {
-    padding: 5px; /* Reduce padding even further on small screens */
-  }
-
   nz-card {
-    max-width: 100%;
-    padding: 10px; /* Less padding on very small screens */
+    padding: 1.5rem;
   }
+}
 
-  button[nz-button] {
-    padding: 8px; /* Adjust button padding for tiny screens */
-    font-size: 14px; /* Keep font size small */
+/* Form Field Styling */
+nz-form-item {
+  margin-bottom: 1.2rem;
+}
+
+input[nz-input] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #b46e6e;
+  border-radius: 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[nz-input]:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+  outline: none;
+}
+
+input[nz-input]::placeholder {
+  color: #aaa;
+  opacity: 0.8;
+}
+
+/* Error Message Styling */
+.error-message {
+  color: #ff4d4f;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  animation: shake 0.3s ease-in-out;
+}
+
+/* Button Styling */
+button[nz-button] {
+  margin-top: 1.5rem;
+  background-color: #1890ff;
+  color: rgb(157, 79, 79);
+  font-weight: bold;
+  border-radius: 4px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+button[nz-button]:hover {
+  transform: scale(1.05);
+  background-color: #40a9ff;
+}
+
+/* Link for Forgot Password */
+.forgot-password {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #1890ff;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #40a9ff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
 
-  .nz-form-item {
-    margin-bottom: 15px; /* Reduce margin for form items on small screens */
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
   }
 }

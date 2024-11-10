@@ -1,17 +1,42 @@
 <div class="login-container">
-  <h1>Hi, Welcome Back</h1>
-  <h3>Login Here</h3>
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <div class="input-group">
-      <label for="email">Email</label>
-      <input formControlName="email" required type="email">
-      
-      <label for="password">Password</label>
-      <input formControlName="password" type="password">
-    </div>
-    <button class="submit-btn">Submit</button>
-    <span>Don't have an account? 
-      <a href="/sign-up">Sign Up</a>
-    </span>
-  </form>
+  <nz-card nzTitle="Login">
+    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+      <!-- Username Field -->
+      <nz-form-item>
+        <nz-form-control 
+          nzErrorTip="Please enter your username"
+          [nzValidateStatus]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched ? 'error' : ''">
+          <input 
+            type="text" 
+            nz-input 
+            formControlName="username" 
+            placeholder="Username" 
+          />
+          <div *ngIf="loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched" class="error-message">
+            Username is required.
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Password Field -->
+      <nz-form-item>
+        <nz-form-control 
+          nzErrorTip="Please enter your password"
+          [nzValidateStatus]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched ? 'error' : ''">
+          <input 
+            type="password" 
+            nz-input 
+            formControlName="password" 
+            placeholder="Password" 
+          />
+          <div *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched" class="error-message">
+            Password is required.
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Login Button -->
+      <button nz-button nzType="primary" nzBlock [disabled]="loginForm.invalid">Login</button>
+    </form>
+  </nz-card>
 </div>

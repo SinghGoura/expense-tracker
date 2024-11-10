@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const BASE_URL = "http://localhost:3000/api/expense"; // Change this to your API URL
+const BASE_URL = "http://localhost:3000/api/income"; // Change this to your API URL
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +15,10 @@ export class IncomeService {
     return this.http.get(BASE_URL + `/all`); // Assuming your API has an endpoint for getting all incomes
   }
 
-  postIncome(incomeDTO: any): Observable<any> {
-    return this.http.post(BASE_URL, incomeDTO); // Assuming this endpoint handles posting income
+  postIncome(data: any): Observable<any> {
+    return this.http.post<any>('http://localhost:3000/api/income', data);
   }
+  
 
   getIncomeById(id:number): Observable<any> {
     return this.http.get<any>(BASE_URL + `/${id}`); // Assuming your API has an endpoint for getting all incomes
