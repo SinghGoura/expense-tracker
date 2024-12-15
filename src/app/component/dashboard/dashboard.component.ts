@@ -40,18 +40,15 @@ export class DashboardComponent {
   ) {}
 
   ngOnInit(): void {
-    this.statsService.getStats().subscribe({
-      next: (data) => {
-        this.statsData = data;
-        this.createIncomeChart();  // Create chart after data is fetched
-        this.createExpenseChart();
-      },
-      error: (error) => {
-        this.errorMessage = error.message;
-        console.error('Error fetching data:', error);
-      }
-    });
-  }
+    this.statsService.getStats().subscribe(
+        data => {
+            console.log('Stats data:', data);
+        },
+        error => {
+            console.error('Error fetching stats:', error);
+        }
+    );
+}
 
 //   fetchDashboardData(): void {
 //     this.http.get('/api/dashboard-data').subscribe(

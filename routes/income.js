@@ -15,6 +15,7 @@ const incomeSchema = new mongoose.Schema({
 
 const Income = mongoose.model('Income', incomeSchema);
 
+module.exports = { Income };
 // RESTful API Endpoints
 
 // Get all income
